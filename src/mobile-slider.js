@@ -16,7 +16,7 @@
 	}
 
 	//for direct use
-	else factory($)
+	else factory(Zepto)
 
 	//factory
 	function factory($) {
