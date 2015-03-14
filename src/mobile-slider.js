@@ -82,12 +82,6 @@
 		th.$sliderItems.filter(function(index) {
 			return index % 2
 		}).addClass('ms-odd')
-		
-		//auto start
-		if(th.defs.autoSlider) {
-			th.currentPage = th.currentPage - 1 + th.length
-			th.autoroll()
-		}
 
 		//nav button
 		if(defs.hasNav) {
@@ -139,6 +133,10 @@
 				})
 			}
 		}
+
+		//start
+		th.currentPage = th.currentPage - 1 + th.length
+		th.autoroll()
 
 	}
 	
