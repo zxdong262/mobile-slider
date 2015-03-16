@@ -16,6 +16,10 @@ visit <a href="http://html5beta.com/apps/mobile-slider.html" target="_blank">dem
 
 <a href="http://html5beta.com/apps/mobile-slider.html" target="_blank">http://html5beta.com/apps/mobile-slider.html</a>
 
+## scan qrcode below to see the demo in your phone
+
+<img src="http://zxdong262.github.io/mobile-slider/res/qr.png" alt="" />
+
 ## test
 
 ```bash
