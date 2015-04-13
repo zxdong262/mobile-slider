@@ -45,6 +45,7 @@
 			,afterAction: null //callback fater slider finish. param ms(MS instance)
 			,startIndex: 0 //start from index, start from 0
 			,vertical: true //is vertical slider
+			,hasIndicator: false //show Indicator
 		}
 		,opts = _opts
 		,$obj = _$obj
@@ -97,6 +98,38 @@
 			})
 		}
 
+		//Indicator
+		if(defs.hasIndicator) {
+			var dotsHtml = '<div class="ms-dots">'
+			for(var di = 0;di < th.length;di ++) {
+				dotsHtml += '<span class="ms-dot" data-ms-index="' + di + '"></span>'
+			}
+			dotsHtml += '</div>'
+
+			th.$wrap.append(dotsHtml)
+			var tdots = th.$wrap.children('.ms-dots')
+			tdots.css({
+				'z-index': defs.zIndex + 20 + th.length
+				,'margin-top': - (0.5 * tdots.height())
+			})
+			if(defs.vertical) tdots.css({
+				'margin-top': - (0.5 * tdots.height())
+			})
+			else tdots.css({
+				'margin-left': - (0.5 * tdots.height())
+			})
+
+			if(defs.navEvent) th.$wrap.on('click tap', '.ms-dot', function() {
+				if(th.onAction) return
+				var i = $(this).data('ms-index')
+				if(i === th.currentPage) return
+				var isNext = i > th.currentPage
+				,len = th.length
+				,ind = (th.currentPage + len) % len
+				th.action(isNext, ind, i)
+			})
+		}
+
 		//swipe event
 		if(defs.swipeEvent) {
 
@@ -105,15 +138,15 @@
 					if(th.onAction) return
 					var isNext = true
 					,len = th.length
-					,i = (th.currentPage + len) % len
-					th.action(isNext, i)
+					,i = (th.currentPage + len + 1) % len
+					th.action(isNext, th.currentPage, i)
 				})
 				th.$wrap.swipeDown(function() {
 					if(th.onAction) return
 					var isNext = false
 					,len = th.length
-					,i = (th.currentPage + len) % len
-					th.action(isNext, i)
+					,i = (th.currentPage + len - 1) % len
+					th.action(isNext, th.currentPage, i)
 				})
 			}
 			else {
@@ -121,15 +154,15 @@
 					if(th.onAction) return
 					var isNext = true
 					,len = th.length
-					,i = (th.currentPage + len) % len
-					th.action(isNext, i)
+					,i = (th.currentPage + len + 1) % len
+					th.action(isNext, th.currentPage, i)
 				})
 				th.$wrap.swipeRight(function() {
 					if(th.onAction) return
 					var isNext = false
 					,len = th.length
-					,i = (th.currentPage + len) % len
-					th.action(isNext, i)
+					,i = (th.currentPage + len - 1) % len
+					th.action(isNext, th.currentPage, i)
 				})
 			}
 		}
@@ -140,14 +173,15 @@
 
 	}
 	
-	MS.prototype.action = function(isNext, index) {
+	MS.prototype.action = function(isNext, index, nextIndex) {
 		this.onAction = true
 		clearTimeout(this.timerhandler)
 		var th = this
+		,hasNextIndex = (nextIndex !== undefined)
 		,defs = th.defs
 		,speed = defs.speed
 		,targetFrame = th.$sliderItems.eq(index)
-		,nextFrame = th.$sliderItems.eq((index + 1 + th.length) % th.length)
+		,nextFrame = th.$sliderItems.eq(hasNextIndex?nextIndex : (index + 1 + th.length) % th.length)
 		,anim1 = {}
 		,anim2 = {}
 		,css1 = {
@@ -184,13 +218,21 @@
 			'z-index': defs.zIndex
 		})
 
+		th.$wrap.find('.ms-dot[data-ms-index="' + th.currentPage + '"]')
+		.addClass('on')
+		.siblings('.ms-dot').removeClass('on')
+
 		if($.isFunction(th.defs.beforeAction)) th.defs.beforeAction.call(th)
 
 		targetFrame.css(css1)
 		nextFrame.css(css2)
 		targetFrame.animate(anim1, speed)
 		nextFrame.animate(anim2, speed, function() {
-			th.currentPage = index + 1
+			th.currentPage = hasNextIndex?nextIndex : (index + 1 + th.length) % th.length
+			th.$wrap.find('.ms-dot[data-ms-index="' + th.currentPage + '"]')
+			.addClass('on')
+			.siblings('.ms-dot').removeClass('on')
+
 			th.onAction = false
 			if($.isFunction(th.defs.afterAction)) th.defs.afterAction.call(th)
 			if(defs.autoSlider) {
@@ -203,11 +245,13 @@
 
 
 	}
+
 	MS.prototype.autoroll = function() {
 		var t = this
 		var i = (t.currentPage + t.length) % t.length
 		if(!t.pause) t.action(true, i)
 	}
+
 	MS.prototype.destroy = function() {
 		var t = this
 		clearTimeout(t.timerhandler)

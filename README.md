@@ -9,6 +9,8 @@ slider zepto plugin for mobile device.
 - beforeAction and afterAction callback
 - any dom element, image, div, a, ...
 - can auto roll
+- support multiple instance
+- supoort indicators
 
 visit <a href="http://html5beta.com/apps/mobile-slider.html" target="_blank">demo & doc</a> for more info.
 
@@ -31,7 +33,7 @@ node app
 
 visit 
 
-[http://localhost:44434](http://localhost:44434)
+[http://localhost:4434](http://localhost:4434)
 
 ## licence
 
