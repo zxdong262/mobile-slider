@@ -115,7 +115,7 @@
 				'margin-top': - (0.5 * tdots.height())
 			})
 			else tdots.css({
-				'margin-left': - (0.5 * tdots.height())
+				'margin-left': - (0.5 * tdots.width())
 			})
 
 			if(defs.navEvent) th.$wrap.on('click tap', '.ms-dot', function() {
