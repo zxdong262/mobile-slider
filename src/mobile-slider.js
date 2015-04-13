@@ -110,7 +110,6 @@
 			var tdots = th.$wrap.children('.ms-dots')
 			tdots.css({
 				'z-index': defs.zIndex + 20 + th.length
-				,'margin-top': - (0.5 * tdots.height())
 			})
 			if(defs.vertical) tdots.css({
 				'margin-top': - (0.5 * tdots.height())
